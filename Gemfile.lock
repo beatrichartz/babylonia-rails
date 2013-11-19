@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    babylonia-rails (0.1.0)
+    babylonia-rails (0.0.1)
       activerecord (>= 3.2.0)
       babylonia (>= 0.0.1)
 

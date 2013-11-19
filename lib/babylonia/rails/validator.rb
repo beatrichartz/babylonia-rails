@@ -1,7 +1,7 @@
 class LanguagesValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    validate_languages_present(record, attribute, option[:present].sort) if options[:present]
-    validate_length_in_range(record, attribute) if options[:length].is_a?(Range)
+    validate_languages_present(record, attribute, options[:present].sort) if options[:present]
+    validate_length_in_range(record, attribute, options[:length]) if options[:length].is_a?(Range)
   end
   
   private
