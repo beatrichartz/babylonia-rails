@@ -8,7 +8,7 @@ Or via the gem command
   gem install babylonia-rails
 
 == How to ride the rails to babylonia
-Use like babylonia, validate like rails
+Feels like babylonia, validates like rails
 
    class BabylonianFields < ActiveRecord::Base
      build_babylonian_tower_on :grass
