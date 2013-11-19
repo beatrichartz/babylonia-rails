@@ -20,6 +20,16 @@ describe LanguagesValidator do
           subject.should_not be_valid
           subject.errors[:marshes].first.should == "should also be translated in DE and IT"
         end
+        it "should indicate remaining incomplete languages if some are updated" do
+          subject.marshes = {it: 'SOMETHING'}
+          subject.should_not be_valid
+          subject.errors[:marshes].first.should == "should also be translated in DE"
+        end
+        it "should work when attributes are deleted" do
+          subject.marshes = ''
+          subject.should_not be_valid
+          subject.errors[:marshes].first.should == "should also be translated in DE, EN, and IT"
+        end
       end
       context "when valid" do
         before(:each) do

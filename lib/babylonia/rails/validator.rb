@@ -7,7 +7,7 @@ class LanguagesValidator < ActiveModel::EachValidator
   private
   
   def validate_languages_present(record, attribute, languages)
-    is     = keys_not_matching(record, attribute){|k,v| v.empty? }
+    is     = record_attribute_languages(record, attribute)
     unless is == languages
       record.errors[attribute] << (options[:message] || "should also be translated in #{(languages - is).map(&:upcase).to_sentence}")
     end
