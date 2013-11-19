@@ -7,6 +7,27 @@ In your gemfile
 Or via the gem command
   gem install babylonia-rails
 
+== How to ride the rails to babylonia
+Use like babylonia, validate like rails
+
+   class BabylonianFields < ActiveRecord::Base
+     build_babylonian_tower_on :grass
+     
+     validate :grass, languages: {present: [:en, :de, :it], length: 2..1000}
+   end
+   
+   I18n.locale #=> :en, so it will set en
+   
+   babylonian_field = BabylonianFields.new grass: 'Hello'
+  
+   babylonian_field.valid? #=> false
+   babylonian_field.errors.full_messages #=> "Grass should also be translated in DE and IT"
+   babylonian_field.grass = {de: 'DEUTSCH', it: 'I'}
+   babylonian_field.valid? #=> false
+   babylonian_field.errors.full_messages #=> "Grass should be between 2 an 1000 characters in IT"
+   babylonian_field.grass = {it: 'IT'}
+   babylonian_field.valid? #=> true
+
 == For Basic Usage
 Visit {babylonia}[http://github.com/beatrichartz/babylonia]
 
