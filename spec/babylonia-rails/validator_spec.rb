@@ -5,7 +5,7 @@ describe LanguagesValidator do
   class BabylonianField < ActiveRecord::Base
     
     build_babylonian_tower_on :marshes
-    validates :marshes, languages: { present: %i(de en it), length: 5..11 }
+    validates :marshes, languages: { present: [:de, :en, :it], length: 5..11 }
     
   end
   
