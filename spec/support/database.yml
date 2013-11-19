@@ -4,7 +4,7 @@ global: &global
   encoding: utf8
 
 base: &base
-  username: developer
+  username: travis
   password:
   host: 127.0.0.1
   application_timezone: :local
