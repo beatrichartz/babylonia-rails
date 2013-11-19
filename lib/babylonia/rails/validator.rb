@@ -14,7 +14,7 @@ class LanguagesValidator < ActiveModel::EachValidator
   end
   
   def validate_length_in_range(record, attribute, range)
-    all          = record_attribute_hash(record, attribute).keys.sort
+    all          = record_attribute_languages(record, attribute)
     in_range     = keys_not_matching(record, attribute){|k,v| !range.include?(v.size) }
     unless all.empty? || all == in_range
       record.errors[attribute] << (options[:message] || "should be between #{range.first} and #{range.last} characters for #{(all - in_range).map(&:upcase).to_sentence}")
@@ -28,5 +28,9 @@ class LanguagesValidator < ActiveModel::EachValidator
   
   def record_attribute_hash record, attribute
     record.send(:"#{attribute}_hash")
+  end
+  
+  def record_attribute_languages record, attribute
+    record.send(:"#{attribute}_languages").sort
   end
 end
