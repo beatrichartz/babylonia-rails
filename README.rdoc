@@ -1,0 +1,29 @@
+= babylonia-rails {<img src="https://secure.travis-ci.org/beatrichartz/babylonia-rails.png?branch=master" />}[http://travis-ci.org/beatrichartz/babylonia-rails] {<img src="https://gemnasium.com/beatrichartz/babylonia-rails.png" alt="Dependency Status" />}[https://gemnasium.com/beatrichartz/babylonia-rails] {<img src="https://codeclimate.com/github/beatrichartz/babylonia-rails.png" />}[https://codeclimate.com/github/beatrichartz/babylonia-rails]
+Let there be languages for your rails users!
+
+== Installation
+In your gemfile
+  gem "babylonia-rails"
+Or via the gem command
+  gem install babylonia-rails
+
+== For Basic Usage
+Visit {babylonia}[http://github.com/beatrichartz/babylonia]
+
+== Contributing to babylonia-rails
+
+Please note that only open source APIs can be accepted as contributions to this gem. Private / Premium APIs have to be written as your own extension and will not be added to the gem code.
+ 
+* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
+* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
+* Fork the project.
+* Start a feature/bugfix branch.
+* Commit and push until you are happy with your contribution.
+* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
+* Make sure to add documentation for it. This is important so everyone else can see what your code can do.
+* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+
+== Copyright
+
+Copyright (c) 2013 Beat Richartz. See LICENSE.txt for
+further details.
