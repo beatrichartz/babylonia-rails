@@ -12,7 +12,8 @@ module Babylonia
         def validate_each(record, attribute, value)
           @validators = {}
           record.available_locales.each do |lang|
-            [:absence, :acceptance, :exclusion, :format, :inclusion, :length, :numericality, :presence, :uniqueness].each do |validation|
+            validations = ActiveRecord::VERSION::MAJOR < 4 ? [:acceptance, :exclusion, :format, :inclusion, :length, :numericality, :presence, :uniqueness] : [:absence, :acceptance, :exclusion, :format, :inclusion, :length, :numericality, :presence, :uniqueness]
+            validations.each do |validation|
               add_validator validation, attribute, lang if should_validate?(validation, lang)
             end
           end

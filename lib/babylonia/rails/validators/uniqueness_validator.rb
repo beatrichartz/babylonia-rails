@@ -6,7 +6,7 @@ module Babylonia
       class UniquenessValidator < ::ActiveRecord::Validations::UniquenessValidator
         
         def validate(record)
-          attributes.each do |locale, attribute|
+          (ActiveRecord::VERSION::MAJOR > 3 ? attributes : attributes.first).each do |locale, attribute|
             value = record.read_attribute_for_validation(:"#{attribute}_#{locale}")
             next if (value.nil? && options[:allow_nil]) || (value.blank? && options[:allow_blank])
             validate_each(record, attribute, locale, value)
@@ -16,11 +16,17 @@ module Babylonia
         def validate_each(record, attribute, locale, value)
           finder_class = find_finder_class_for(record)
           table = finder_class.arel_table
-          value = deserialize_attribute(record, :"#{attribute}_#{locale}", value)
 
           relation = build_relation(finder_class, table, attribute, locale, value)
           relation = relation.and(table[finder_class.primary_key.to_sym].not_eq(record.id)) if record.persisted?
-          relation = scope_relation(record, table, relation)
+          if ActiveRecord::VERSION::MAJOR > 3
+            relation = scope_relation(record, table, relation)
+          else
+            Array.wrap(options[:scope]).each do |scope_item|
+              scope_value = record.read_attribute(scope_item)
+              relation = relation.and(table[scope_item].eq(scope_value))
+            end
+          end
           relation = finder_class.unscoped.where(relation)
           relation = relation.merge(options[:conditions]) if options[:conditions]
 

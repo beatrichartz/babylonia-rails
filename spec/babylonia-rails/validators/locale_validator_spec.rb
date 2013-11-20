@@ -113,8 +113,10 @@ describe Babylonia::Rails::Validators::LocalesValidator do
       end
       ActiveModel::Validations::PresenceValidator.should_receive(:new).with(attributes: [:marshes_de,:marshes_en,:marshes_it]).and_return(presence_validator)
       presence_validator.should_receive(:validate).with(subject)
-      ActiveModel::Validations::AbsenceValidator.should_receive(:new).with(attributes: [:marshes_pi,:marshes_gb,:marshes_er]).and_return(absence_validator)
-      absence_validator.should_receive(:validate).with(subject)
+      unless ActiveRecord::VERSION::MAJOR < 4
+        ActiveModel::Validations::AbsenceValidator.should_receive(:new).with(attributes: [:marshes_pi,:marshes_gb,:marshes_er]).and_return(absence_validator)
+        absence_validator.should_receive(:validate).with(subject)
+      end
       subject.valid? #=> this will be true since all calls are mocked
     end
     context "integration" do
