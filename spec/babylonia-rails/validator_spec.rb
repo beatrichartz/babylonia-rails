@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe LocalesValidator do
+describe Babylonia::Rails::Validators::LocalesValidator do
   let(:format_validation_options) {
     {
       with: /\A\z/,

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe LocalesValidator do
+describe Babylonia::Rails::Validators::LocalesValidator do
   
   class BabylonianPersistentField < ActiveRecord::Base
     self.table_name = 'babylonian_fields'
