@@ -1,11 +1,12 @@
 require 'spec_helper'
 
-describe LanguagesValidator do
+describe LocalesValidator do
   
-  class BabylonianField < ActiveRecord::Base
+  class BabylonianPersistentField < ActiveRecord::Base
+    self.table_name = 'babylonian_fields'
     
     build_babylonian_tower_on :marshes
-    validates :marshes, languages: { present: [:de, :en, :it], length: 5..11 }
+    validates :marshes, locales: { presence: [:de, :en, :it], length: {in: 5..11} }
     
   end
   
@@ -13,7 +14,7 @@ describe LanguagesValidator do
     before(:each) do
       I18n.stub available_locales: [:de, :en, :it]
     end
-    subject { BabylonianField.new(marshes: {en: 'Hello', de: 'Hello', it: 'Hello'})}
+    subject { BabylonianPersistentField.new(marshes: {en: 'Hello', de: 'Hello', it: 'Hello'})}
     it "should be possible to store the string value" do
       subject.save!
       subject.reload

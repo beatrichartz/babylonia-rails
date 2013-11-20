@@ -1,75 +1,131 @@
 require 'spec_helper'
 
-describe LanguagesValidator do
+describe LocalesValidator do
+  let(:format_validation_options) {
+    {
+      with: /\A\z/,
+      locales: [:de, :en, :it]
+    }
+  }
+  let(:numericality_validation_options) {
+    {
+      only_integer: true,
+      locales: [:de, :en, :it]
+    }
+  }
+  let(:inclusion_validation_options) {
+    {
+      in: %w(small medium large),
+      locales: [:de, :en, :it]
+    }
+  }
+  let(:exclusion_validation_options) {
+    {
+      in: %w(big huge),
+      locales: [:de, :en, :it]
+    }
+  }
+  let(:length_validation_options) {
+    {
+      in: 5..11,
+      locales: [:de, :en, :it]
+    }
+  }
+  let(:validation_options) {
+    {
+      presence: [:de, :en, :it],
+      absence: [:pi, :gb, :er],
+      format: format_validation_options,
+      numericality: numericality_validation_options,
+      inclusion: inclusion_validation_options,
+      exclusion: exclusion_validation_options,
+      length: length_validation_options
+    }
+  }
   
   class BabylonianField < ActiveRecord::Base
-    
+
     build_babylonian_tower_on :marshes
-    validates :marshes, languages: { present: [:de, :en, :it], length: 5..11 }
-    
+
+    class << self
+      def install_validations(options)
+        validates :marshes, locales: options
+      end
+    end
+
   end
   
-  describe "validations" do
-    subject { BabylonianField.new(marshes: "Hello") }
-    before(:each) do
-      I18n.stub locale: :en, available_locales: [:de, :en, :it]
+  class BabylonianSecondField < ActiveRecord::Base
+    self.table_name = 'babylonian_fields'
+    
+    build_babylonian_tower_on :marshes
+
+    class << self
+      def install_validations(options)
+        validates :marshes, locales: options
+      end
     end
-    context "presence validations" do
-      context "when invalid" do
-        it "should indicate which languages are not translated" do
+  end
+  
+  class BabylonianThirdField < ActiveRecord::Base
+    self.table_name = 'babylonian_fields'
+    
+    build_babylonian_tower_on :marshes
+
+    class << self
+      def install_validations(options)
+        validates :marshes, allow_nil: true, locales: options
+      end
+    end
+  end
+       
+  before(:each) do
+    I18n.stub available_locales: [:de, :en, :it, :pi, :gb, :er]
+    BabylonianField.install_validations(validation_options)
+    BabylonianSecondField.install_validations(validation_options)
+    BabylonianThirdField.install_validations(validation_options)
+  end
+  
+  describe "rails validations except confirmation, acceptance and uniqueness" do
+    subject { BabylonianField.new }
+    let(:format_validator) { double('format_validator') }
+    let(:inclusion_validator) { double('inclusion_validator') }
+    let(:exclusion_validator) { double('exlusion_validator') }
+    let(:length_validator) { double('length_validator') }
+    let(:presence_validator) { double('presence_validator') }
+    let(:absence_validator) { double('absence_validator') }
+    let(:numericality_validator) { double('absence_validator') }
+    
+    it "should pass them on to the rails validators" do
+      [:format, :inclusion, :exclusion, :length, :numericality].each do |validator|
+        options = send(:"#{validator}_validation_options")
+        attributes = options[:locales].map{|l| :"marshes_#{l}"}
+        "ActiveModel::Validations::#{validator.to_s.classify}Validator".constantize.should_receive(:new).with(options.dup.delete_if{|k,v| k == :locales}.merge(attributes: attributes)).and_return(send(:"#{validator}_validator"))
+        send(:"#{validator}_validator").should_receive(:validate).with(subject)
+      end
+      ActiveModel::Validations::PresenceValidator.should_receive(:new).with(attributes: [:marshes_de,:marshes_en,:marshes_it]).and_return(presence_validator)
+      presence_validator.should_receive(:validate).with(subject)
+      ActiveModel::Validations::AbsenceValidator.should_receive(:new).with(attributes: [:marshes_pi,:marshes_gb,:marshes_er]).and_return(absence_validator)
+      absence_validator.should_receive(:validate).with(subject)
+      subject.valid? #=> this will be true since all calls are mocked
+    end
+    context "integration" do
+      context "with defaults" do
+        subject { BabylonianSecondField.new }
+        it "should work for all kinds of errors" do
           subject.should_not be_valid
-          subject.errors[:marshes].first.should == "should be filled in DE and IT"
-          subject.errors[:marshes_en].should be_empty
-          subject.errors[:marshes_de].first.should == "should be filled"
-          subject.errors[:marshes_it].first.should == "should be filled"
-        end
-        it "should indicate remaining incomplete languages if some are updated" do
-          subject.marshes = {it: 'SOMETHING'}
-          subject.should_not be_valid
-          subject.errors[:marshes].first.should == "should be filled in DE"
-          subject.errors[:marshes_en].should be_empty
-          subject.errors[:marshes_it].should be_empty
-          subject.errors[:marshes_de].first.should == "should be filled"
-        end
-        it "should work when attributes are deleted" do
-          subject.marshes = ''
-          subject.should_not be_valid
-          subject.errors[:marshes].first.should == "should be filled in DE, EN, and IT"
-          subject.errors[:marshes_en].first.should == "should be filled"
-          subject.errors[:marshes_de].first.should == "should be filled"
-          subject.errors[:marshes_it].first.should == "should be filled"
+          subject.errors[:marshes_de].uniq.should == ["can't be blank", "is not a number", "is not included in the list", "is too short (minimum is 5 characters)"]
         end
       end
-      context "when valid" do
-        before(:each) do
-          subject.marshes = {en: 'Hello', de: 'Hello', it: 'Hello'}
-        end
-        it "should be valid" do
+      context "with allow_nil set to true" do
+        subject { BabylonianThirdField.new }
+        it "should allow blank" do
           subject.should be_valid
+          subject.errors.should be_blank
         end
       end
     end
-    context "length validations" do
-      before(:each) do
-        subject.marshes = {en: 'H', de: 'Hello', it: 'Hlo'}
-      end
-      context "when invalid" do
-        it "should indicate that the languages that are not in length" do
-          subject.should_not be_valid
-          subject.errors[:marshes].first.should == "should be between 5 and 11 characters in EN and IT"
-          subject.errors[:marshes_en].first.should == "should be between 5 and 11 characters"
-          subject.errors[:marshes_it].first.should == "should be between 5 and 11 characters"
-        end
-      end
-      context "when valid" do
-        before(:each) do
-          subject.marshes = {en: 'HelloHelloH', de: 'Hello', it: 'Hello'}
-        end
-        it "should be valid" do
-          subject.should be_valid
-        end
-      end
-    end
+
   end
   
   

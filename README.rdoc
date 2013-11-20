@@ -13,7 +13,7 @@ Feels like babylonia, validates like rails
    class BabylonianFields < ActiveRecord::Base
      build_babylonian_tower_on :grass
      
-     validate :grass, languages: {present: [:en, :de, :it], length: 2..1000}
+     validate :grass, locales: {presence: [:en, :de, :it], length: 2..1000}
    end
    
    I18n.locale #=> :en, so it will set en
