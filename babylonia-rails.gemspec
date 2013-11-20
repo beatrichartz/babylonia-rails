@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   
   active_record       = ENV["ACTIVE_RECORD_VERSION"] || ">= 3.2.0"
   
-  s.add_dependency              "babylonia", ">= 0.0.2"
+  s.add_dependency              "babylonia", ">= 0.0.3"
   s.add_dependency              "activerecord", active_record
   s.add_development_dependency  "bundler", ">= 1.0.0"
 end
