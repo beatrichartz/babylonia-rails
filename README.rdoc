@@ -7,7 +7,7 @@ In your gemfile
 Or via the gem command
   gem install babylonia-rails
 
-== How to ride the rails to babylonia
+== How to Ride the Rails to Babylonia
 Feels like babylonia, validates like rails
 
    class BabylonianFields < ActiveRecord::Base
@@ -17,18 +17,31 @@ Feels like babylonia, validates like rails
    end
    
    I18n.locale #=> :en, so it will set en
+   I18n.available_locales #=> [:en, :de, :it] should be like this, otherwise assign
    
    babylonian_field = BabylonianFields.new grass: 'Hello'
   
    babylonian_field.valid? #=> false
-   babylonian_field.errors.full_messages #=> "Grass should also be translated in DE and IT"
+   babylonian_field.errors[:grass] #=> ["Grass should be filled in DE and IT"]
+   babylonian_field.errors[:grass_de] #=> ["should be filled"]
+   babylonian_field.errors[:grass_it] #=> ["should be filled"]
    babylonian_field.grass = {de: 'DEUTSCH', it: 'I'}
    babylonian_field.valid? #=> false
-   babylonian_field.errors.full_messages #=> "Grass should be between 2 an 1000 characters in IT"
+   babylonian_field.errors[:grass] #=> ["should be between 2 an 1000 characters in IT"]
+   babylonian_field.errors[:grass_it] #=> ["should be between 2 an 1000 characters"]
    babylonian_field.grass = {it: 'IT'}
    babylonian_field.valid? #=> true
 
-== For Basic Usage
+== What About Forms?
+
+   form_for(@babylonian_field, url: {action: 'create'}) do |f|
+     f.text_field :grass_en
+     f.text_field :grass_de
+     f.text_field :grass_it
+     f.submit "Create"
+   end
+
+== For Further Usage
 Visit {babylonia}[http://github.com/beatrichartz/babylonia]
 
 == Contributing to babylonia-rails
