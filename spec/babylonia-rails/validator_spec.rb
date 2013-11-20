@@ -12,23 +12,32 @@ describe LanguagesValidator do
   describe "validations" do
     subject { BabylonianField.new(marshes: "Hello") }
     before(:each) do
-      I18n.stub locale: :en
+      I18n.stub locale: :en, available_locales: [:de, :en, :it]
     end
     context "presence validations" do
       context "when invalid" do
         it "should indicate which languages are not translated" do
           subject.should_not be_valid
-          subject.errors[:marshes].first.should == "should also be translated in DE and IT"
+          subject.errors[:marshes].first.should == "should be filled in DE and IT"
+          subject.errors[:marshes_en].should be_empty
+          subject.errors[:marshes_de].first.should == "should be filled"
+          subject.errors[:marshes_it].first.should == "should be filled"
         end
         it "should indicate remaining incomplete languages if some are updated" do
           subject.marshes = {it: 'SOMETHING'}
           subject.should_not be_valid
-          subject.errors[:marshes].first.should == "should also be translated in DE"
+          subject.errors[:marshes].first.should == "should be filled in DE"
+          subject.errors[:marshes_en].should be_empty
+          subject.errors[:marshes_it].should be_empty
+          subject.errors[:marshes_de].first.should == "should be filled"
         end
         it "should work when attributes are deleted" do
           subject.marshes = ''
           subject.should_not be_valid
-          subject.errors[:marshes].first.should == "should also be translated in DE, EN, and IT"
+          subject.errors[:marshes].first.should == "should be filled in DE, EN, and IT"
+          subject.errors[:marshes_en].first.should == "should be filled"
+          subject.errors[:marshes_de].first.should == "should be filled"
+          subject.errors[:marshes_it].first.should == "should be filled"
         end
       end
       context "when valid" do
@@ -47,7 +56,9 @@ describe LanguagesValidator do
       context "when invalid" do
         it "should indicate that the languages that are not in length" do
           subject.should_not be_valid
-          subject.errors[:marshes].first.should == "should be between 5 and 11 characters for EN and IT"
+          subject.errors[:marshes].first.should == "should be between 5 and 11 characters in EN and IT"
+          subject.errors[:marshes_en].first.should == "should be between 5 and 11 characters"
+          subject.errors[:marshes_it].first.should == "should be between 5 and 11 characters"
         end
       end
       context "when valid" do

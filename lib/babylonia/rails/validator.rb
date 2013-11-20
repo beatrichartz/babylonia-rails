@@ -9,7 +9,10 @@ class LanguagesValidator < ActiveModel::EachValidator
   def validate_languages_present(record, attribute, languages)
     is     = record_attribute_languages(record, attribute)
     unless is == languages
-      record.errors[attribute] << (options[:message] || "should also be translated in #{(languages - is).map(&:upcase).to_sentence}")
+      record.errors[attribute] << (options[:message] || "should be filled in #{(languages - is).map(&:upcase).to_sentence}")
+      (languages - is).each do |lang|
+        record.errors[:"#{attribute}_#{lang}"] << (options[:message] || "should be filled")
+      end
     end
   end
   
@@ -17,7 +20,10 @@ class LanguagesValidator < ActiveModel::EachValidator
     all          = record_attribute_languages(record, attribute)
     in_range     = keys_not_matching(record, attribute){|k,v| !range.include?(v.size) }
     unless all.empty? || all == in_range
-      record.errors[attribute] << (options[:message] || "should be between #{range.first} and #{range.last} characters for #{(all - in_range).map(&:upcase).to_sentence}")
+      record.errors[attribute] << (options[:message] || "should be between #{range.first} and #{range.last} characters in #{(all - in_range).map(&:upcase).to_sentence}")
+      (all - in_range).each do |lang|
+        record.errors[:"#{attribute}_#{lang}"] << (options[:message] || "should be between #{range.first} and #{range.last} characters")
+      end
     end
   end
   

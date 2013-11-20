@@ -10,6 +10,9 @@ describe LanguagesValidator do
   end
   
   describe "persistence" do
+    before(:each) do
+      I18n.stub available_locales: [:de, :en, :it]
+    end
     subject { BabylonianField.new(marshes: {en: 'Hello', de: 'Hello', it: 'Hello'})}
     it "should be possible to store the string value" do
       subject.save!
