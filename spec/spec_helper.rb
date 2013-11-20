@@ -21,6 +21,8 @@ end
 RSpec.configure do |configuration|
   include HelperMethods
   configuration.before(:suite) do
+    ActiveRecord::Base.logger = Logger.new($stdout)
+    
     ActiveRecord::Base.configurations = YAML.load_file(File.expand_path('./support/database.yml', File.dirname(__FILE__)))
     ActiveRecord::Base.establish_connection(:test)
     require File.expand_path('./support/tables.rb', File.dirname(__FILE__))

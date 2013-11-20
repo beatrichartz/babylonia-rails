@@ -8,29 +8,29 @@ Or via the gem command
   gem install babylonia-rails
 
 == How to Ride the Rails to Babylonia
-Feels like babylonia, validates like rails
+Feels like babylonia, validates like rails: You can use all rails validators except confirmation. Just add the validation options under :locales in the validation as you would normally do.
 
    class BabylonianFields < ActiveRecord::Base
-     build_babylonian_tower_on :grass
+     build_babylonian_tower_on :grass, :sand, :sea
      
-     validate :grass, locales: {presence: [:en, :de, :it], length: 2..1000}
+     validates :grass, locales: { presence: [:en, :de, :it], length: { in: 6..20 }}
+     validates :sand, locales: { absence: [:en, :it], format: { with: /some nifty regexp/ }}
    end
    
-   I18n.locale #=> :en, so it will set en
-   I18n.available_locales #=> [:en, :de, :it] should be like this, otherwise assign
+You can add a :locales option to each validation to determine which locales get validated with the said validator
+
+   class BabylonianFields < ActiveRecord::Base
+     build_babylonian_tower_on :grass, :sand, :sea
+     
+     validates :grass, locales: { presence: [:en, :de, :it], length: { in: 6..20, locales: [:it] }}
+     validates :sand, locales: { absence: [:en, :it], uniqueness: { scope: :some_scope, locales: [:de, :en] }}
+   end
    
-   babylonian_field = BabylonianFields.new grass: 'Hello'
-  
-   babylonian_field.valid? #=> false
-   babylonian_field.errors[:grass] #=> ["Grass should be filled in DE and IT"]
-   babylonian_field.errors[:grass_de] #=> ["should be filled"]
-   babylonian_field.errors[:grass_it] #=> ["should be filled"]
-   babylonian_field.grass = {de: 'DEUTSCH', it: 'I'}
-   babylonian_field.valid? #=> false
-   babylonian_field.errors[:grass] #=> ["should be between 2 an 1000 characters in IT"]
-   babylonian_field.errors[:grass_it] #=> ["should be between 2 an 1000 characters"]
-   babylonian_field.grass = {it: 'IT'}
-   babylonian_field.valid? #=> true
+Yes, there's also uniqueness validation. It works with a LIKE / arel.matches query.
+
+For all the details on rails validation visit {here}[http://edgeguides.rubyonrails.org/active_record_validations.html#validation-helpers].
+
+Please be aware that validations will only validate available locales!
 
 == What About Forms?
 
@@ -40,6 +40,9 @@ Feels like babylonia, validates like rails
      f.text_field :grass_it
      f.submit "Create"
    end
+   
+== What about dynamic Finders?
+Uhhm, no. Arel itself is pretty nifty, so if you want to find something by SQL, you will.
 
 == For Further Usage
 Visit {babylonia}[http://github.com/beatrichartz/babylonia]

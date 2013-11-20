@@ -12,22 +12,31 @@ module Babylonia
         def validate_each(record, attribute, value)
           @validators = {}
           record.available_locales.each do |lang|
-            [:presence, :absence, :numericality, :format, :inclusion, :exclusion, :length].each do |validation|
+            [:absence, :acceptance, :exclusion, :format, :inclusion, :length, :numericality, :presence, :uniqueness].each do |validation|
               add_validator validation, attribute, lang if should_validate?(validation, lang)
             end
           end
     
           validators.each do |validator, attributes|
-            "ActiveModel::Validations::#{validator.to_s.classify}Validator".constantize.new(validator_attributes(validator, attributes)).validate(record)
-          end if validators
+            if validator == :uniqueness
+              Babylonia::Rails::Validators::UniquenessValidator.new(validator_attributes(validator, attributes)).validate(record)
+            else
+              "ActiveModel::Validations::#{validator.to_s.classify}Validator".constantize.new(validator_attributes(validator, attributes)).validate(record)
+            end
+          end
         end
   
         private
   
         def add_validator validator, attribute, lang
           @validators ||= {}
-          @validators[validator] ||= { attributes: [] }
-          @validators[validator][:attributes] << :"#{attribute}_#{lang}"
+          if validator == :uniqueness
+            @validators[validator] ||= { attributes: {} }
+            @validators[validator][:attributes].merge! lang => attribute
+          else
+            @validators[validator] ||= { attributes: [] }
+            @validators[validator][:attributes] << :"#{attribute}_#{lang}"
+          end
         end
   
         def should_validate?(option, lang)

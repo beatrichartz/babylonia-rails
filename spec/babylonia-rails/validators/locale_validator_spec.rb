@@ -48,7 +48,9 @@ describe Babylonia::Rails::Validators::LocalesValidator do
     build_babylonian_tower_on :marshes
 
     class << self
+      attr_accessor :installed_validations
       def install_validations(options)
+        self.installed_validations = true
         validates :marshes, locales: options
       end
     end
@@ -61,7 +63,9 @@ describe Babylonia::Rails::Validators::LocalesValidator do
     build_babylonian_tower_on :marshes
 
     class << self
+      attr_accessor :installed_validations
       def install_validations(options)
+        self.installed_validations = true
         validates :marshes, locales: options
       end
     end
@@ -73,17 +77,21 @@ describe Babylonia::Rails::Validators::LocalesValidator do
     build_babylonian_tower_on :marshes
 
     class << self
+      attr_accessor :installed_validations
       def install_validations(options)
+        self.installed_validations = true
         validates :marshes, allow_nil: true, locales: options
       end
     end
   end
-       
+  
   before(:each) do
     I18n.stub available_locales: [:de, :en, :it, :pi, :gb, :er]
-    BabylonianField.install_validations(validation_options)
-    BabylonianSecondField.install_validations(validation_options)
-    BabylonianThirdField.install_validations(validation_options)
+    # it is not allowed to access structures created by let in before(:all), but installing the validators on each run is also not
+    # the way to go.
+    BabylonianField.install_validations(validation_options) unless BabylonianField.installed_validations
+    BabylonianSecondField.install_validations(validation_options) unless BabylonianSecondField.installed_validations
+    BabylonianThirdField.install_validations(validation_options) unless BabylonianThirdField.installed_validations
   end
   
   describe "rails validations except confirmation, acceptance and uniqueness" do
@@ -114,7 +122,9 @@ describe Babylonia::Rails::Validators::LocalesValidator do
         subject { BabylonianSecondField.new }
         it "should work for all kinds of errors" do
           subject.should_not be_valid
-          subject.errors[:marshes_de].uniq.should == ["can't be blank", "is not a number", "is not included in the list", "is too short (minimum is 5 characters)"]
+          [:de, :en, :it].each do |lang|
+            subject.errors[:"marshes_#{lang}"].should == ["is not included in the list", "is too short (minimum is 5 characters)", "is not a number", "can't be blank"]
+          end
         end
       end
       context "with allow_nil set to true" do
