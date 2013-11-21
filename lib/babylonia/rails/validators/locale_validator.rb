@@ -20,7 +20,7 @@ module Babylonia
     
           validators.each do |validator, attributes|
             if validator == :uniqueness
-              Babylonia::Rails::Validators::UniquenessValidator.new(validator_attributes(validator, attributes)).validate(record)
+              Babylonia::Rails::Validators::LocaleUniquenessValidator.new(validator_attributes(validator, attributes)).validate(record)
             else
               "ActiveModel::Validations::#{validator.to_s.classify}Validator".constantize.new(validator_attributes(validator, attributes)).validate(record)
             end

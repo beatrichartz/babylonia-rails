@@ -3,7 +3,7 @@ require 'active_record'
 module Babylonia
   module Rails
     module Validators
-      class UniquenessValidator < ::ActiveRecord::Validations::UniquenessValidator
+      class LocaleUniquenessValidator < ::ActiveRecord::Validations::UniquenessValidator
         
         def validate(record)
           (ActiveRecord::VERSION::MAJOR > 3 ? attributes : attributes.first).each do |locale, attribute|

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Babylonia::Rails::Validators::UniquenessValidator do
+describe Babylonia::Rails::Validators::LocaleUniquenessValidator do
   let(:case_sensitive_validation_options) {
     {
       uniqueness: {
