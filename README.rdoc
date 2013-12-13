@@ -1,4 +1,4 @@
-= babylonia-rails {<img src="https://secure.travis-ci.org/beatrichartz/babylonia-rails.png?branch=master" />}[http://travis-ci.org/beatrichartz/babylonia-rails] {<img src="https://gemnasium.com/beatrichartz/babylonia-rails.png" alt="Dependency Status" />}[https://gemnasium.com/beatrichartz/babylonia-rails] {<img src="https://codeclimate.com/github/beatrichartz/babylonia-rails.png" />}[https://codeclimate.com/github/beatrichartz/babylonia-rails]
+= babylonia-rails {<img src="https://secure.travis-ci.org/beatrichartz/babylonia-rails.png?branch=master" />}[http://travis-ci.org/beatrichartz/babylonia-rails] {<img src="https://gemnasium.com/beatrichartz/babylonia-rails.png" alt="Dependency Status" />}[https://gemnasium.com/beatrichartz/babylonia-rails] {<img src="https://codeclimate.com/github/beatrichartz/babylonia-rails.png" />}[https://codeclimate.com/github/beatrichartz/babylonia-rails] {<img src="https://d2weczhvl823v0.cloudfront.net/beatrichartz/babylonia-rails/trend.png"}[https://bitdeli.com/free]
 Let there be languages for your rails users!
 
 == Installation
