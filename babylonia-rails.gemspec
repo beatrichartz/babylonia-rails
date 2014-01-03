@@ -18,8 +18,9 @@ Gem::Specification.new do |s|
   
   active_record       = ENV["ACTIVE_RECORD_VERSION"] || ">= 3.2.0"
   
-  s.add_dependency              "babylonia", ">= 0.1.1"
+  s.add_dependency              "babylonia", "~> 0.2", ">= 0.1.1"
   s.add_dependency              "activerecord", active_record
-  s.add_development_dependency  "bundler", ">= 1.0.0"
+  s.add_development_dependency  "bundler", "~> 1.3", ">= 1.0.0"
+  s.add_development_dependency  "rubysl", "~> 2.0" if 'rbx' == RUBY_ENGINE
 end
 
