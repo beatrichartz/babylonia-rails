@@ -30,10 +30,7 @@ module Babylonia
           relation = relation.merge options[:conditions] if options[:conditions]
 
           if relation.exists?
-            error_options = options.except :case_sensitive, :scope, :conditions
-            error_options[:value] = value
-
-            record.errors.add :"#{attribute}_#{locale}", :taken, error_options
+            add_uniqueness_validation_error record, options, attribute, locale, value
           end
         end
 
@@ -57,15 +54,29 @@ module Babylonia
 
         def build_relation klass, table, attribute, locale, value #:nodoc:
           column = klass.columns_hash[attribute.to_s]
-          value  = klass.connection.type_cast(value, column)
-          value  = YAML.dump(locale => value).gsub(/\A[^\n]+/, '')
-          value  = value.to_s[0, column.limit] if value && column.limit && column.text?
+          value  = build_yaml_dump_value klass, value, column, locale
+          
           if !options[:case_sensitive] && value && column.text?
             table[attribute].lower.matches("%#{value.respond_to?(:expr) ? value.expr : value.downcase}%")
           else
             value = klass.connection.case_sensitive_modifier(value) unless value.nil?
             table[attribute].matches("%#{value.expr}%")
           end
+        end
+        
+        def build_yaml_dump_value klass, value, column, locale
+          value  = klass.connection.type_cast(value, column)
+          value  = YAML.dump(locale => value).gsub(/\A[^\n]+/, '')
+          value  = value.to_s[0, column.limit] if value && column.limit && column.text?
+          
+          value
+        end
+        
+        def add_uniqueness_validation_error record, options, attribute, locale, value #:nodoc:
+          error_options = options.except :case_sensitive, :scope, :conditions
+          error_options[:value] = value
+
+          record.errors.add :"#{attribute}_#{locale}", :taken, error_options
         end
         
         def scope_relation_for_active_record_3 relation, options  #:nodoc:
