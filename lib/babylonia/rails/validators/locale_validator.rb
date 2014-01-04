@@ -12,7 +12,7 @@ module Babylonia
         def validate_each(record, attribute, value)
           @validators = {}
           record.available_locales.each do |lang|
-            validations = ActiveRecord::VERSION::MAJOR < 4 ? [:acceptance, :exclusion, :format, :inclusion, :length, :numericality, :presence, :uniqueness] : [:absence, :acceptance, :exclusion, :format, :inclusion, :length, :numericality, :presence, :uniqueness]
+            validations = [is_active_record_4? && :absence, :acceptance, :exclusion, :format, :inclusion, :length, :numericality, :presence, :uniqueness].compact
             validations.each do |validation|
               add_validator validation, attribute, lang if should_validate?(validation, lang)
             end
@@ -54,6 +54,10 @@ module Babylonia
   
         def validator_attributes(validator, attributes)
           options[validator].is_a?(Hash) ? options[validator].delete_if{|k,v| k == :locales}.merge(attributes) : attributes
+        end
+        
+        def is_active_record_4? #:nodoc:
+          ActiveRecord::VERSION::MAJOR > 3
         end
   
       end
