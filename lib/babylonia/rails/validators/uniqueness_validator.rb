@@ -23,7 +23,7 @@ module Babylonia
           relation = if is_active_record_4?
             scope_relation record, table, relation
           else
-            scope_relation_for_active_record_3 relation, options
+            scope_relation_for_active_record_3 record, table, relation, options
           end
           
           relation = finder_class.unscoped.where relation
@@ -79,7 +79,7 @@ module Babylonia
           record.errors.add :"#{attribute}_#{locale}", :taken, error_options
         end
         
-        def scope_relation_for_active_record_3 relation, options  #:nodoc:
+        def scope_relation_for_active_record_3 record, table, relation, options  #:nodoc:
           Array.wrap(options[:scope]).each do |scope_item|
             scope_value = record.read_attribute scope_item
             relation = relation.and table[scope_item].eq(scope_value)
