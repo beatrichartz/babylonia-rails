@@ -14,13 +14,27 @@ Gem::Specification.new do |s|
   
   s.files             = `git ls-files`.split("\n")
   s.test_files        = `git ls-files -- spec/*`.split("\n")
-  s.require_paths     = ["lib"]
+  s.extensions        = 'ext/mkrf_conf.rb'
   
-  active_record       = ENV["ACTIVE_RECORD_VERSION"] || ">= 3.2.0"
+  s.add_dependency              'babylonia',      '~> 0.2', '>= 0.2.1'
+  s.add_dependency              'activerecord',   '>= 3.1'
+  s.add_development_dependency  'bundler',        '~> 1.3'
+  s.add_development_dependency  'appraisal',      '~> 0.5'
+  s.add_development_dependency  'rspec',          '~> 2'
+  s.add_development_dependency  'rspec-rails',    '~> 2'
+  s.add_development_dependency  'yard',           '~> 0.8'
+  s.add_development_dependency  'bundler',        '~> 1.3'
   
-  s.add_dependency              "babylonia", "~> 0.2", ">= 0.1.1"
-  s.add_dependency              "activerecord", active_record
-  s.add_development_dependency  "bundler", "~> 1.3", ">= 1.0.0"
-  s.add_development_dependency  "rubysl", "~> 2.0" if 'rbx' == RUBY_ENGINE
+  if RUBY_VERSION =~ /jruby/
+    s.add_development_dependency 'activerecord-jdbcmysql-adapter'
+  else
+    s.add_development_dependency 'mysql2'
+  end
+  
+  if 'rbx' == RUBY_ENGINE
+    s.add_development_dependency  'rubysl',         '~> 2.0'
+    s.add_development_dependency  'rubysl-test-unit', '~> 2.0'
+    s.add_development_dependency  'racc',         '~> 1.4'
+  end
 end
 

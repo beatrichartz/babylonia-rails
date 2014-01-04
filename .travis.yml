@@ -2,9 +2,7 @@ services: mysql
 before_script:
   - mysql -e "CREATE DATABASE babylonia_test;"
 language: ruby
-env:
-  - "ACTIVE_RECORD_VERSION='~> 3.2'"
-  - "ACTIVE_RECORD_VERSION='>= 4.0.0'"
+
 rvm:
   - 1.9.3
   - 2.0.0
@@ -12,8 +10,13 @@ rvm:
   - rbx
   - jruby-19mode
   - jruby-20mode
-  
-script: bundle exec rspec
+
+gemfile:
+  - gemfiles/4.0.Gemfile
+  - gemfiles/3.2.gemfile
+  - gemfiles/3.1.Gemfile  
+
+script: bundle exec rake spec
 
 matrix:
   allow_failures:

@@ -17,7 +17,9 @@ if rbx
   end
 
   dep = [
-    Gem::Dependency.new("rubysl", '~> 2.0')
+    Gem::Dependency.new("rubysl", '~> 2.0'),
+    Gem::Dependency.new("rubysl-test-unit", '~> 2.0'),
+    Gem::Dependency.new("racc", '~> 1.4')
   ].reject{|d| already_installed(d) }
 
   begin

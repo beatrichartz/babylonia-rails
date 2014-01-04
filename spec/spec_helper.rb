@@ -15,7 +15,10 @@ end
 require 'babylonia/rails'
 
 module HelperMethods
-  
+  def establish_ar_connection
+    ActiveRecord::Base.configurations = YAML.load_file(File.expand_path('./support/database.yml', File.dirname(__FILE__)))
+    ActiveRecord::Base.establish_connection(:test)
+  end
 end
 
 require File.expand_path('./support/tables.rb', File.dirname(__FILE__))
@@ -23,12 +26,13 @@ require File.expand_path('./support/tables.rb', File.dirname(__FILE__))
 RSpec.configure do |configuration|
   include HelperMethods
   configuration.before(:suite) do
-    ActiveRecord::Base.configurations = YAML.load_file(File.expand_path('./support/database.yml', File.dirname(__FILE__)))
-    ActiveRecord::Base.establish_connection(:test)
+    establish_ar_connection
 
     CreateTestTables.new.up
   end
   configuration.after(:suite) do
+    establish_ar_connection
+    
     CreateTestTables.new.down
   end
 end

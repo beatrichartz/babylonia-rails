@@ -17,6 +17,7 @@ tmp
 .yardoc
 _yardoc
 doc/
+gemfiles/*
 
 # Gemnasium gem configuration file
 config/gemnasium.yml
