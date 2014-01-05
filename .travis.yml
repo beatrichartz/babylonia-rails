@@ -41,6 +41,12 @@ matrix:
       gemfile: gemfiles/3.2_jruby.gemfile
     - rvm: 2.1.0
       gemfile: gemfiles/3.1_jruby.gemfile
+    - rvm: rbx
+      gemfile: gemfiles/4.0_jruby.gemfile
+    - rvm: rbx
+      gemfile: gemfiles/3.2_jruby.gemfile
+    - rvm: rbx
+      gemfile: gemfiles/3.1_jruby.gemfile
     - rvm: jruby-19mode
       gemfile: gemfiles/4.0.gemfile
     - rvm: jruby-19mode
