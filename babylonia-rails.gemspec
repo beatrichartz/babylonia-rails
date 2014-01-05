@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency  'yard',           '~> 0.8'
   s.add_development_dependency  'bundler',        '~> 1.3'
   
-  if RUBY_VERSION =~ /jruby/
+  if RUBY_ENGINE == 'jruby'
     s.add_development_dependency 'activerecord-jdbcmysql-adapter'
   else
     s.add_development_dependency 'mysql2'
