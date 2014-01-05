@@ -12,43 +12,46 @@ rvm:
   - jruby-20mode
 
 gemfile:
-  - gemfiles/4.0.Gemfile
+  - gemfiles/4.0.gemfile
   - gemfiles/3.2.gemfile
-  - gemfiles/3.1.Gemfile  
-
+  - gemfiles/3.1.gemfile
+  - gemfiles/4.0_jruby.gemfile
+  - gemfiles/3.2_jruby.gemfile
+  - gemfiles/3.1_jruby.gemfile
+  
 script: "bundle install && bundle exec rake spec"
 
 matrix:
   exclude:
     - rvm: 1.9.3
-      gemfile: gemfiles/4.0-jruby.Gemfile
+      gemfile: gemfiles/4.0_jruby.gemfile
     - rvm: 1.9.3
-      gemfile: gemfiles/3.2-jruby.Gemfile
+      gemfile: gemfiles/3.2_jruby.gemfile
     - rvm: 1.9.3
-      gemfile: gemfiles/3.1-jruby.Gemfile
+      gemfile: gemfiles/3.1_jruby.gemfile
     - rvm: 2.0.0
-      gemfile: gemfiles/4.0-jruby.Gemfile
+      gemfile: gemfiles/4.0_jruby.gemfile
     - rvm: 2.0.0
-      gemfile: gemfiles/3.2-jruby.Gemfile
+      gemfile: gemfiles/3.2_jruby.gemfile
     - rvm: 2.0.0
-      gemfile: gemfiles/3.1-jruby.Gemfile
+      gemfile: gemfiles/3.1_jruby.gemfile
     - rvm: 2.1.0
-      gemfile: gemfiles/4.0-jruby.Gemfile
+      gemfile: gemfiles/4.0_jruby.gemfile
     - rvm: 2.1.0
-      gemfile: gemfiles/3.2-jruby.Gemfile
+      gemfile: gemfiles/3.2_jruby.gemfile
     - rvm: 2.1.0
-      gemfile: gemfiles/3.1-jruby.Gemfile
+      gemfile: gemfiles/3.1_jruby.gemfile
     - rvm: jruby-19mode
-      gemfile: gemfiles/4.0.Gemfile
+      gemfile: gemfiles/4.0.gemfile
     - rvm: jruby-19mode
-      gemfile: gemfiles/3.2.Gemfile
+      gemfile: gemfiles/3.2.gemfile
     - rvm: jruby-19mode
-      gemfile: gemfiles/3.1.Gemfile
+      gemfile: gemfiles/3.1.gemfile
     - rvm: jruby-20mode
-      gemfile: gemfiles/4.0.Gemfile
+      gemfile: gemfiles/4.0.gemfile
     - rvm: jruby-20mode
-      gemfile: gemfiles/3.2.Gemfile
+      gemfile: gemfiles/3.2.gemfile
     - rvm: jruby-20mode
-      gemfile: gemfiles/3.1.Gemfile
+      gemfile: gemfiles/3.1.gemfile
   allow_failures:
     - rvm: 2.1.0
