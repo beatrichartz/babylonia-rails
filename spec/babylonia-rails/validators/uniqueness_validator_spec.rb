@@ -88,14 +88,14 @@ describe Babylonia::Rails::Validators::LocaleUniquenessValidator do
         existing.destroy
       end
       it "should validate the records uniqueness" do
-        subject.should_not be_valid
-        subject.errors.full_messages.should == ["Marshes de has already been taken", "Marshes en has already been taken", "Marshes fr has already been taken"]
+        expect(subject).not_to be_valid
+        expect(subject.errors.full_messages).to eq(["Marshes de has already been taken", "Marshes en has already been taken", "Marshes fr has already been taken"])
       end
     end
     context "with no existing record" do
       subject { BabylonianUniqueField.new(duplicate_attributes) }
       it "should validate the records uniqueness" do
-        subject.should be_valid
+        expect(subject).to be_valid
       end
     end
   end
@@ -110,8 +110,8 @@ describe Babylonia::Rails::Validators::LocaleUniquenessValidator do
         existing.destroy
       end
       it "should validate the records uniqueness" do
-        subject.should_not be_valid
-        subject.errors.full_messages.should == ["Marshes de has already been taken", "Marshes en has already been taken", "Marshes fr has already been taken"]
+        expect(subject).not_to be_valid
+        expect(subject.errors.full_messages).to eq(["Marshes de has already been taken", "Marshes en has already been taken", "Marshes fr has already been taken"])
       end
     end
     context "with an existing record with differently cased attributes" do
@@ -121,13 +121,13 @@ describe Babylonia::Rails::Validators::LocaleUniquenessValidator do
         existing.destroy
       end
       it "should validate the records uniqueness" do
-        subject.should be_valid
+        expect(subject).to be_valid
       end
     end
     context "with no existing record" do
       subject { BabylonianUniqueSecondField.new(attributes) }
       it "should validate the records uniqueness" do
-        subject.should be_valid
+        expect(subject).to be_valid
       end
     end
   end
@@ -143,8 +143,8 @@ describe Babylonia::Rails::Validators::LocaleUniquenessValidator do
         existing.destroy
       end
       it "should validate the records uniqueness" do
-        subject.should_not be_valid
-        subject.errors.full_messages.should == ["Marshes de has already been taken", "Marshes en has already been taken", "Marshes fr has already been taken"]
+        expect(subject).not_to be_valid
+        expect(subject.errors.full_messages).to eq(["Marshes de has already been taken", "Marshes en has already been taken", "Marshes fr has already been taken"])
       end
     end
     context "with an existing record in another scope" do
@@ -154,13 +154,13 @@ describe Babylonia::Rails::Validators::LocaleUniquenessValidator do
         existing.destroy
       end
       it "should validate the records uniqueness" do
-        subject.should be_valid
+        expect(subject).to be_valid
       end
     end
     context "with no existing record" do
       subject { BabylonianUniqueThirdField.new(attributes) }
       it "should validate the records uniqueness" do
-        subject.should be_valid
+        expect(subject).to be_valid
       end
     end
   end

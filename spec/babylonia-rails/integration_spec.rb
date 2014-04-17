@@ -8,7 +8,7 @@ describe "Integration" do
   
   describe "Babylonia" do
     it "should already have extended active record" do
-      BabylonianIntegratedField.should be_respond_to(:build_babylonian_tower_on)
+      expect(BabylonianIntegratedField).to be_respond_to(:build_babylonian_tower_on)
     end
   end
   

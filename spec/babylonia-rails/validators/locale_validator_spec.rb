@@ -108,14 +108,14 @@ describe Babylonia::Rails::Validators::LocalesValidator do
       [:format, :inclusion, :exclusion, :length, :numericality].each do |validator|
         options = send(:"#{validator}_validation_options")
         attributes = options[:locales].map{|l| :"marshes_#{l}"}
-        "ActiveModel::Validations::#{validator.to_s.classify}Validator".constantize.should_receive(:new).with(options.dup.delete_if{|k,v| k == :locales}.merge(attributes: attributes)).and_return(send(:"#{validator}_validator"))
-        send(:"#{validator}_validator").should_receive(:validate).with(subject)
+        expect("ActiveModel::Validations::#{validator.to_s.classify}Validator".constantize).to receive(:new).with(options.dup.delete_if{|k,v| k == :locales}.merge(attributes: attributes)).and_return(send(:"#{validator}_validator"))
+        expect(send(:"#{validator}_validator")).to receive(:validate).with(subject)
       end
-      ActiveModel::Validations::PresenceValidator.should_receive(:new).with(attributes: [:marshes_de,:marshes_en,:marshes_it]).and_return(presence_validator)
-      presence_validator.should_receive(:validate).with(subject)
+      expect(ActiveModel::Validations::PresenceValidator).to receive(:new).with(attributes: [:marshes_de,:marshes_en,:marshes_it]).and_return(presence_validator)
+      expect(presence_validator).to receive(:validate).with(subject)
       unless ActiveRecord::VERSION::MAJOR < 4
-        ActiveModel::Validations::AbsenceValidator.should_receive(:new).with(attributes: [:marshes_pi,:marshes_gb,:marshes_er]).and_return(absence_validator)
-        absence_validator.should_receive(:validate).with(subject)
+        expect(ActiveModel::Validations::AbsenceValidator).to receive(:new).with(attributes: [:marshes_pi,:marshes_gb,:marshes_er]).and_return(absence_validator)
+        expect(absence_validator).to receive(:validate).with(subject)
       end
       subject.valid? #=> this will be true since all calls are mocked
     end
@@ -123,17 +123,17 @@ describe Babylonia::Rails::Validators::LocalesValidator do
       context "with defaults" do
         subject { BabylonianSecondField.new }
         it "should work for all kinds of errors" do
-          subject.should_not be_valid
+          expect(subject).not_to be_valid
           [:de, :en, :it].each do |lang|
-            subject.errors[:"marshes_#{lang}"].should == ["is not included in the list", "is too short (minimum is 5 characters)", "is not a number", "can't be blank"]
+            expect(subject.errors[:"marshes_#{lang}"]).to eq(["is not included in the list", "is too short (minimum is 5 characters)", "is not a number", "can't be blank"])
           end
         end
       end
       context "with allow_nil set to true" do
         subject { BabylonianThirdField.new }
         it "should allow blank" do
-          subject.should be_valid
-          subject.errors.should be_blank
+          expect(subject).to be_valid
+          expect(subject.errors).to be_blank
         end
       end
     end

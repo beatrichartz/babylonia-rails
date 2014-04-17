@@ -18,7 +18,7 @@ describe Babylonia::Rails::Validators::LocalesValidator do
     it "should be possible to store the string value" do
       subject.save!
       subject.reload
-      subject.marshes_hash.should == {en: 'Hello', de: 'Hello', it: 'Hello'}
+      expect(subject.marshes_hash).to eq({en: 'Hello', de: 'Hello', it: 'Hello'})
     end
   end
   
